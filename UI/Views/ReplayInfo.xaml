@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="UI.Views.ReplayInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UI.Views"
+             xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="9*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid Row="0" Background="Azure">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox Margin="10 0 0 0" Width="250"
+                    material:HintAssist.Hint="Search"
+                    IsEditable="True"
+                    Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                    ItemsSource="{Binding Path=Pathes}"
+                    SelectedItem="{Binding Path=Scomboitem, Mode=TwoWay}">
+                </ComboBox>
+                <Button Margin="10 7 0 0" Command="{Binding FileBrowser}">
+                    <material:PackIcon Kind="FileFind" />
+                </Button>
+                <Button Margin="10,7,0,0" Width="Auto" Command="{Binding ScanReplays}">
+                    <material:PackIcon Kind="Cached" Height="Auto" Width="Auto" />
+                </Button>
+            </StackPanel>
+
+        </Grid>
+        <Grid Row="1" Background="AntiqueWhite">
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         Value="0"
+                         IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" Visibility="{Binding Progress}"></ProgressBar>
+            <DataGrid x:Name="ReplayGrid" Visibility="{Binding Path=GridVisible}" ItemsSource="{Binding Path=Replays, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False"
+                      IsReadOnly="True" SelectedItem="{Binding SelectedItem}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Size" Binding="{Binding Size}"></DataGridTextColumn>
+                    <material:MaterialDataGridTextColumn Header="Map" Binding="{Binding Map}"></material:MaterialDataGridTextColumn>
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}"></DataGridTextColumn>
+                    <material:MaterialDataGridTextColumn Header="Player" Binding="{Binding Player}"></material:MaterialDataGridTextColumn>
+                    <DataGridTextColumn Header="Vehicle" Binding="{Binding Vehicle}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Version" Binding="{Binding Version}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="DateTime" Binding="{Binding DateTime}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Respawn" Binding="{Binding Respawn}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Winner" Binding="{Binding Winner}"></DataGridTextColumn>
+                    <material:MaterialDataGridTextColumn Header="BattleType" Binding="{Binding BattleType}"></material:MaterialDataGridTextColumn>
+                    <DataGridTemplateColumn Header="Other">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding DataContext.OnOtherClick, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}">
+                                    <Button.DataContext>
+                                        <viewmodel:ReplayInfoVm/>
+                                    </Button.DataContext> Подробнее</Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="False">
+                                <Setter Property="Background" Value="Red"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>
