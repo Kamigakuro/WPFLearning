@@ -13,28 +13,45 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C624CB50
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicModule.Tests", "LogicModule.Tests\LogicModule.Tests.csproj", "{A60430BE-9807-43F5-8C2C-BD4E66519A19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaterialDesignColors.Wpf", "..\MaterialDesignInXamlToolkit-master\MaterialDesignColors.Wpf\MaterialDesignColors.Wpf.csproj", "{90B53209-C60C-4655-B28D-A1B3E1044BA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AppVeyor|Any CPU = AppVeyor|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.AppVeyor|Any CPU.ActiveCfg = Release|Any CPU
+		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.AppVeyor|Any CPU.Build.0 = Release|Any CPU
 		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE2065DB-20F8-4BA4-ACE4-5F0E09AF5FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.AppVeyor|Any CPU.ActiveCfg = Release|Any CPU
+		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.AppVeyor|Any CPU.Build.0 = Release|Any CPU
 		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{786C5BCF-1AA8-4936-A1CC-566298066F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.AppVeyor|Any CPU.ActiveCfg = Release|Any CPU
+		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.AppVeyor|Any CPU.Build.0 = Release|Any CPU
 		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA5B0257-7501-48D7-B63B-E630A0F7BDA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.AppVeyor|Any CPU.ActiveCfg = Release|Any CPU
+		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.AppVeyor|Any CPU.Build.0 = Release|Any CPU
 		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A60430BE-9807-43F5-8C2C-BD4E66519A19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.AppVeyor|Any CPU.Build.0 = AppVeyor|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B53209-C60C-4655-B28D-A1B3E1044BA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

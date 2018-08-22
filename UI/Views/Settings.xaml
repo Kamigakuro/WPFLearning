@@ -5,54 +5,168 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UI.Views"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helpers="clr-namespace:UI.Helpers"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="10*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <material:Card Height="60" 
-                Margin="10"
-                material:ShadowAssist.ShadowDepth="Depth3">
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15 0 0 0">Настройки</TextBlock>
+             d:DesignHeight="600" d:DesignWidth="800"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <!-- throw in some extra colour for our floating action button -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <StackPanel CanVerticallyScroll="True" Orientation="Vertical" Height="832">
+            <material:Card Height="60" Margin="5" material:ShadowAssist.ShadowDepth="Depth3">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15 0 0 0" Style="{StaticResource MaterialDesignHeadlineTextBlock}">Настройки</TextBlock>
             </material:Card>
-        </Grid>
-        <Grid Grid.Row="1">
-            <GroupBox Margin="16 0 0 0" Header="Параметры" Style="{DynamicResource MaterialDesignGroupBox}" material:ShadowAssist.ShadowDepth="Depth0"  Width="250" Height="Auto" HorizontalAlignment="Left">
-                <StackPanel  Width="Auto" Height="Auto">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0">
-                        <TextBlock>Text</TextBlock>
-                        <ToggleButton Margin="15 0 0 0"></ToggleButton>
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
-        </Grid>
-        
-    </Grid>
+            <material:Card Height="Auto" Margin="5" material:ShadowAssist.ShadowDepth="Depth3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                        <ColumnDefinition Width="340"></ColumnDefinition>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition Height="45"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="15"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontSize="18" Margin="15 5 0 0" Foreground="{DynamicResource PrimaryHueMidBrush}">Основное</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Проверять обновления</TextBlock>
+                    <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="16" VerticalAlignment="Center">URL обновлений</TextBlock>
+                    <TextBlock  Grid.Row="3" Grid.Column="1" FontSize="16" VerticalAlignment="Bottom">История сканирования</TextBlock>
+
+                    <ToggleButton Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=CheckUpdates}" VerticalAlignment="Center" Height="36" Width="63"></ToggleButton>
+                    <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" material:HintAssist.Hint="Ссылка" Text="{Binding URLUpdate}" VerticalAlignment="Center" Height="46" Width="221" Margin="69,25,-89,0" Grid.RowSpan="2"  ></TextBox>
+                    <TextBox Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" material:HintAssist.Hint="Количество" Text="{Binding HistoryCount}" VerticalAlignment="Bottom" Height="42" Width="132" Margin="69,28,0,0" Grid.RowSpan="2"  />
+                </Grid>
+            </material:Card>
+            <material:Card Height="Auto" Margin="5" material:ShadowAssist.ShadowDepth="Depth3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="15"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontSize="18" Margin="15 5 0 0" Foreground="{DynamicResource PrimaryHueMidBrush}">Сканирование</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Сканировать в подкаталогах</TextBlock>
+                    <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Сканировать ZIP архивы</TextBlock>
+                    <TextBlock  Grid.Row="3" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Временная папка для распаковки</TextBlock>
+                    <TextBlock  Grid.Row="4" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Создавать резервные копии реплеев</TextBlock>
+                    <TextBlock  Grid.Row="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Путь резервирования</TextBlock>
+                    <TextBlock  Grid.Row="6" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Сканировать реплеи при запуске программы</TextBlock>
+                    <TextBlock  Grid.Row="7" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Уведомлять о посторонних файлах в архиве</TextBlock>
+                    <TextBlock  Grid.Row="8" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Сканировать ZIP архивы</TextBlock>
+                    <ToggleButton Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=ScanSubDir}" VerticalAlignment="Center" Height="36" Width="63"></ToggleButton>
+                    <ToggleButton x:Name="ZipToggle" Grid.Row="2" Grid.Column="2" IsChecked="{Binding Path=ScanZips}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <TextBox x:Name="NameTextBox" material:HintAssist.Hint="Название папки" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="2" Margin="69,0,-76,15" Width="208"
+                             IsEnabled="{Binding ElementName=ZipToggle, Path=IsChecked}">
+                        <TextBox.Text>
+                            <Binding Path="TempFolder" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <helpers:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <ToggleButton x:Name="ReplayCopyToggleButton" Grid.Row="4" Grid.Column="2" IsChecked="{Binding Path=Reserving}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <TextBox Grid.Row="5" Grid.Column="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" AcceptsReturn="True" TextWrapping="Wrap" MaxWidth="400"
+                        material:HintAssist.Hint="Введите путь"
+                        IsEnabled="{Binding Path=IsChecked, ElementName=ReplayCopyToggleButton}" Text="{Binding ReservDir}" Height="40" Margin="69,5,-76,5" />
+                    <Button Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right" Margin="0,10,-113,8" IsEnabled="{Binding Path=IsChecked, ElementName=ReplayCopyToggleButton}"></Button>
+                    <ToggleButton Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=ScanOnRun}" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <ToggleButton Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=AllertAlien}" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <ToggleButton Grid.Row="8" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                </Grid>
+            </material:Card>
+            <material:Card Height="Auto" Margin="5" material:ShadowAssist.ShadowDepth="Depth3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15"></ColumnDefinition>
+                        <ColumnDefinition Width="340"></ColumnDefinition>
+                        <ColumnDefinition Width="200"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="15"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontSize="18" Margin="15 5 0 0" Foreground="{DynamicResource PrimaryHueMidBrush}">Дизайн</TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Помечать битые реплеи</TextBlock>
+                    <TextBlock  Grid.Row="2" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Помечать сомнительные реплеи</TextBlock>
+                    <TextBlock  Grid.Row="3" Grid.Column="1" FontSize="16" VerticalAlignment="Bottom">Размер сомнительного реплея</TextBlock>
+                    <TextBlock  Grid.Row="4" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Тема</TextBlock>
+                    <TextBlock  Grid.Row="5" Grid.Column="1" FontSize="16" VerticalAlignment="Center">Темные тона</TextBlock>
+
+                    <ToggleButton Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=MarkBroken}" VerticalAlignment="Center" Height="36" Width="63"></ToggleButton>
+                    <ToggleButton Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" IsChecked="{Binding Path=MarkLow}" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <TextBox Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center"  material:HintAssist.Hint="Размер файла" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="71,0,10,0" Width="120" Text="{Binding Path=LowSizeValue}" />
+                    <ComboBox Grid.Row="4" Grid.Column="2" SelectedValue="{Binding SelectedTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Themes}"
+                        material:ComboBoxAssist.ShowSelectedItem="True" Margin="74,8,10,8" HorizontalAlignment="Center" VerticalAlignment="Center" Width="117">
+                    </ComboBox>
+                    <ToggleButton Grid.Row="5" Grid.Column="2" IsChecked="{Binding Path=IsDarken, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="60"></ToggleButton>
+                    <Button Grid.Column="2" Grid.Row="1"  HorizontalAlignment="Center" Margin="197,2,-22,2" Width="25" Height="25" VerticalAlignment="Center" Command="{Binding ChangeBroken}">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Ellipse  Fill="{Binding Path=BrokenColor}" Stroke="Black" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Grid.Column="2" Grid.Row="2"  HorizontalAlignment="Center" Margin="197,2,-22,2" Width="25" Height="25" VerticalAlignment="Center" Command="{Binding ChangeLow}">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Ellipse  Fill="{Binding Path=WarningColor}" Stroke="Black" />
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                </Grid>
+            </material:Card>
+            <material:Card Height="Auto" Margin="5" material:ShadowAssist.ShadowDepth="Depth3">
+                <Grid>
+                    <Button Margin="20" HorizontalAlignment="Left" Background="{StaticResource ValidationErrorBrush}" BorderBrush="{StaticResource ValidationErrorBrush}">Сборсить настройки</Button>
+                    <Button Margin="0 20 205 20" HorizontalAlignment="Right">Отменить изменения</Button>
+                    <Button Margin="20" HorizontalAlignment="Right" Command="{Binding SaveSettings}">Сохранить изменения</Button>
+                </Grid>
+            </material:Card>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -13,6 +13,15 @@ namespace LogicModule
 {
     public class LAction
     {
+        public int _count { get; private set; }
+        public int _broken { get; private set; }
+        public bool ForceStop;
+
+        public void ForceStopScan()
+        {
+            ForceStop = true;
+        }
+
         public FileInfo[] ScanFolder(string path, bool allDirectories)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
@@ -22,13 +31,21 @@ namespace LogicModule
 
             return replayfiles;
         }
-
+        public delegate void ReplayCounter();
+        public event ReplayCounter Count;
         public List<ReplayData> ScanReplays(FileInfo[] files, int lines = 0)
         {
             if (files == null || files.Length <= 0) throw new Exception("Param 'files' null or empty");
-
+            _count = 0;
+            _broken = 0;
+            ForceStop = false;
             List<ReplayData> replays = new List<ReplayData>();
-            foreach (var file in files) replays.Add(SingleScan(file, lines));
+            foreach (var file in files)
+            {
+                if (ForceStop) break;
+                _count++; replays.Add(SingleScan(file, lines));
+                Count?.Invoke();
+            }
             return replays;
         }
 
@@ -46,7 +63,7 @@ namespace LogicModule
                     replay.FullPath = file.FullName;
                     replay.Size = Convert.ToInt32(file.Length / 1024);
                     string text = String.Empty;
-                    if (lines > 0) ReplayReader.ReadReplay(replay.FullPath, lines);
+                    if (lines > 0) text = ReplayReader.ReadReplay(replay.FullPath, lines);
                     else text = ReplayReader.ReadReplay(replay.FullPath);
 
                     if (String.IsNullOrEmpty(text)) return replay;
@@ -72,8 +89,9 @@ namespace LogicModule
                         replay.Duration = collector.BattleDuration(text);
                         replay.Winner = collector.Winner(text);
                         replay.Status = collector.GetReplayStatus(text);
-                        
+
                     }
+                    else _broken++;
 
                     return replay;
 

@@ -15,46 +15,125 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="MainWindow" Height="760" Width="1280" WindowStyle="None" AllowsTransparency="True">
+        MinHeight="400" MinWidth="400"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="760" Width="1280" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
     <Window.Resources>
-        <DataTemplate x:Name="MainPage" DataType="{x:Type viewModels:ReplayInfoVm}">
+        <DataTemplate x:Name="ScanPage" DataType="{x:Type viewModels:ReplayInfoVm}">
             <views:ReplayInfo />
         </DataTemplate>
         <DataTemplate x:Name="SettingsPage" DataType="{x:Type viewModels:SettingsVM}">
             <views:Settings />
         </DataTemplate>
+        <DataTemplate x:Name="NewsPage" DataType="{x:Type viewModels:MainVM}">
+            <views:Main />
+        </DataTemplate>
+        <DataTemplate x:Name="SnackBar" DataType="{x:Type viewModels:SnackManager}">
+            
+        </DataTemplate>
+
+        <Style x:Key="Menu" TargetType="{x:Type Grid}">
+            <Setter Property="Margin" Value="0 0 150 0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsChecked, ElementName=menuButton}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="Margin">
+                                <ThicknessAnimation To="0 0 0 0" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="Margin">
+                                <ThicknessAnimation To="-220 0 0 0" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <Grid Row="0" Background="Aquamarine">
-            <Button x:Name="BtnExit" Command="{Binding ExitApp}"
+        <Grid Row="0" Background="{DynamicResource PrimaryHueMidBrush}" MouseDown="move_window" MinHeight="40" MinWidth="200">
+            <ToggleButton x:Name="menuButton" Margin="10 0 0 0" Style="{DynamicResource MaterialDesignHamburgerToggleButton}" HorizontalAlignment="Left"/>
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}">Replay Checker</TextBlock>
+            <Button x:Name="BtnExit" Command="{Binding ExitApp}" Background="{DynamicResource SecondaryAccentBrush}"
                     HorizontalAlignment="Right"
                     Width="20" Height="20"
                     VerticalAlignment="Center"
-                    Margin="0,0,10,0"></Button>
+                    Margin="0,0,10,0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                <materialDesign:PackIcon Kind="WindowClose" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"></materialDesign:PackIcon>
+            </Button>
+            <Button x:Name="BtnMaximize"
+                    HorizontalAlignment="Right"
+                    Width="20" Height="20"
+                    VerticalAlignment="Center"
+                    Margin="0,0,35,0"
+                    Click="MaximizeWindow"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                <materialDesign:PackIcon x:Name="BtnMaximIcon" Kind="WindowMaximize" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}"></materialDesign:PackIcon>
+            </Button>
+            <Button x:Name="BtnMinimize"
+                    HorizontalAlignment="Right"
+                    Width="20" Height="20"
+                    VerticalAlignment="Center"
+                    Margin="0,10,60,10"
+                    Click="MinimizeWindow"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                <materialDesign:PackIcon Kind="WindowMinimize" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Margin="0 3"></materialDesign:PackIcon>
+            </Button>
         </Grid>
 
-        <Grid Row="1">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="6*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Background="#0277BD">
-            <StackPanel>
-                    <Button Height="60" FontSize="22" Command="{Binding MainPage}">Main</Button>
-                    <Button Height="60" FontSize="22" Command="{Binding SettingsPage}">Settings</Button>
-                <Button Height="60" FontSize="22">Text</Button>
+        <Grid Grid.Row="2" Background="{Binding Path=Color}" Opacity="0.8" DataContext="{Binding InfoPanel}">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Margin="5 0 0 0" Kind="{Binding Path=Icon}" Foreground="{DynamicResource MaterialDesignBody}" VerticalAlignment="Center"></materialDesign:PackIcon>
+            <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" Text="{Binding Path=Text}" Foreground="{StaticResource MaterialDesignBody}"></TextBlock>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="1">
+        <Grid Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Margin="-220 0 0 0" Grid.Column="0" Background="{DynamicResource PrimaryHueMidBrush}" Style="{DynamicResource Menu}">
+                <StackPanel>
+                    <Button Height="60" FontSize="22" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding NewsPage}" Style="{StaticResource MaterialDesignFlatButton}">
+                        <Grid Width="185">
+                            <materialDesign:PackIcon Kind="Home" Width="26" Height="26" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="3 0 0 0"/>
+                            <TextBlock VerticalAlignment="Center" Margin="32 0 0 0">Главная</TextBlock>
+                        </Grid>
+                    </Button>
+                    <Button Height="60" FontSize="22" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding ScanPage}" Style="{StaticResource MaterialDesignFlatButton}">
+                        <Grid Width="185">
+                            <materialDesign:PackIcon Kind="ChevronDoubleUp" Width="32" Height="32" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            <TextBlock VerticalAlignment="Center" Margin="32 0 0 0">Сканирование</TextBlock>
+                        </Grid>
+                    </Button>
+                    <Button Height="60" FontSize="22" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Command="{Binding SettingsPage}" Style="{StaticResource MaterialDesignFlatButton}">
+                        <Grid Width="185">
+                            <materialDesign:PackIcon Kind="Settings" Width="22" Height="22" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6 0 0 0"/>
+                            <TextBlock VerticalAlignment="Center" Margin="32 0 0 0">Настройки</TextBlock>
+                        </Grid>
+                    </Button>
+                    <Button Height="60" FontSize="22" Foreground="{DynamicResource PrimaryHueMidForegroundBrush}" Style="{StaticResource MaterialDesignFlatButton}">Text</Button>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
                 <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <ContentControl x:Name="Pages" Content="{Binding SelectedPage}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"></ContentControl>
+                    <ContentControl x:Name="Pages" Content="{Binding SelectedPage}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ></ContentControl>
                 </DockPanel>
             </Grid>
-    </Grid>
         </Grid>
+        <materialDesign:Snackbar Grid.Row="1" Grid.RowSpan="2" IsActive="{Binding Path=SnackShown}" DataContext="{Binding Snack}">
+            <materialDesign:SnackbarMessage Content="{Binding Path=Text}" />
+        </materialDesign:Snackbar>
+    </Grid>
 </Window>

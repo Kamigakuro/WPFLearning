@@ -10,35 +10,36 @@ using System.Windows.Controls;
 using DataModule;
 using System.Windows.Input;
 using LogicModule;
+using MaterialDesignThemes.Wpf;
 using UI.Models;
 using UI.Views;
+using Settings = UI.Models.Settings;
 
 namespace UI.ViewModels
 {
     public class ReplayInfoVm: INotifyPropertyChanged
     {
         private ObservableCollection<ReplayData> _replays;
-        //public readonly ComboBoxItem _currentItem;
-        private ObservableCollection<string> _comboitems;
         private readonly ReplayInfoModel _model;
         private ReplayData _selecteditem;
         private Visibility _gridvisible;
-
+        
 
         public ICommand ScanReplays { get; set; }
         public ICommand FileBrowser { get; set; }
         public ICommand OnOtherClick { get; set; }
-
         public ReplayInfoVm()
         {
             ScanReplays = new BaseCommand(OnScanReplays);
             FileBrowser = new BaseCommand(OnFileDialog);
             OnOtherClick = new BaseCommand(ReplayInformation);
             GridVisible = Visibility.Visible;
-            _model = new ReplayInfoModel();
+            if (_model == null) _model = new ReplayInfoModel();
             _model.PropertyChanged += OnModelChanged;
             Pathes = _model.Pathes;
-            Scomboitem = Pathes[0];
+            if (Pathes.Count > 0)
+                Scomboitem = Pathes[0];
+
         }
 
         private void ReplayInformation(object obj)
@@ -51,10 +52,37 @@ namespace UI.ViewModels
             }
         }
 
+        public bool ScanStatus
+        {
+            get => _model.isScaning;
+        }
+
+        public string BrokenColor
+        {
+            get => Settings.BadColor;
+        }
+        public string LowColor
+        {
+            get => Settings.LowSizeColor;
+        }
+
+        public bool MarkLow
+        {
+            get => Settings.CheckLowSizeReplays;
+        }
+        public bool MarkBroken
+        {
+            get => Settings.CheckBadReplays;
+        }
+
+        public int ScanPercent
+        {
+            get => _model.ScanPercent;
+        }
         public Visibility GridVisible
         {
             get => _gridvisible;
-            set { _gridvisible = value; NotifyPropertyChanged("GridVisible"); }
+            set { _gridvisible = value;  NotifyPropertyChanged("GridVisible"); NotifyPropertyChanged("ScanStatus"); }
         }
         public ReplayData SelectedItem
         {
@@ -62,6 +90,7 @@ namespace UI.ViewModels
             set
             {
                 _selecteditem = value;
+
                 NotifyPropertyChanged("SelectedItem");
             }
         }
@@ -71,21 +100,38 @@ namespace UI.ViewModels
             if (e.PropertyName == "Replays")
             {
                 Replays = _model.Replays;
+                NotifyPropertyChanged("ScanStatus");
                 GridVisible = Visibility.Visible;
             }
+            if (e.PropertyName == "ScanCount")
+            {
+                Settings.panel.Text = "Total: " + _model.ScanCount + "/" + _model.RelayCount + "   Broken: " + _model.BrokenRep;
+                NotifyPropertyChanged("ScanPercent");
+                NotifyPropertyChanged("ScanStatus");
+            }
         }
-        private void OnScanReplays(object obj)
+        private async void OnScanReplays(object obj)
         {
+            if (_model.isScaning)
+            {
+                _model.StopScan();
+                return;
+            }
             GridVisible = Visibility.Hidden;
-            Task.Run(() => _model.ScanReplays(Scomboitem));
+            Settings.panel.Icon = "Cached";
+            Settings.panel.Color = "#E64A19";
+            await Task.Run(() => _model.ScanReplays(Scomboitem));
+            Settings.panel.Text += "    Scan Time: " + _model.ScanTime.ElapsedMilliseconds;
+            Settings.panel.Color = "#4CAF50";
+            Settings.panel.Icon = "CheckAll";
             //_model.ScanReplays(Scomboitem);
 
         }
 
         public ObservableCollection<string> Pathes
         {
-            get => _comboitems;
-            set => _comboitems = value;
+            get => _model.Pathes;
+            set {  _model.Pathes = value; NotifyPropertyChanged("Pathes"); }
         }
 
         public ObservableCollection<ReplayData> Replays
@@ -103,6 +149,7 @@ namespace UI.ViewModels
                 if (_scomboitem != value)
                 {
                     _scomboitem = value;
+                    Pathes.Move(Pathes.IndexOf(value), 0);
                     NotifyPropertyChanged("Scomboitem");
                 }
             }

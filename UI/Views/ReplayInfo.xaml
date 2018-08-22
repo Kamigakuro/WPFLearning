@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UI.Views"
              xmlns:viewmodel="clr-namespace:UI.ViewModels"
+             xmlns:helpers="clr-namespace:UI.Helpers"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
@@ -23,32 +24,58 @@
             <RowDefinition Height="9*"></RowDefinition>
         </Grid.RowDefinitions>
         
-        <Grid Row="0" Background="Azure">
+        <Grid Row="0">
             <StackPanel Orientation="Horizontal">
                 <ComboBox Margin="10 0 0 0" Width="250"
-                    material:HintAssist.Hint="Search"
+                    material:HintAssist.Hint="Выберите путь"
                     IsEditable="True"
                     Style="{StaticResource MaterialDesignFloatingHintComboBox}"
                     ItemsSource="{Binding Path=Pathes}"
                     SelectedItem="{Binding Path=Scomboitem, Mode=TwoWay}">
                 </ComboBox>
-                <Button Margin="10 7 0 0" Command="{Binding FileBrowser}">
+                <Button Margin="10 7 0 0" Command="{Binding FileBrowser}" ToolTip="Выбрать путь">
                     <material:PackIcon Kind="FileFind" />
                 </Button>
-                <Button Margin="10,7,0,0" Width="Auto" Command="{Binding ScanReplays}">
-                    <material:PackIcon Kind="Cached" Height="Auto" Width="Auto" />
+                <Button Margin="10,7,0,0" Width="Auto" Command="{Binding ScanReplays}" ToolTip="Сканировать">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Background" Value="{StaticResource PrimaryHueMidBrush}"></Setter>
+                            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ScanStatus}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource ValidationErrorBrush}"></Setter>
+                                    <Setter Property="BorderBrush" Value="{StaticResource ValidationErrorBrush}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <material:PackIcon Kind="Cached" Height="Auto" Width="Auto">
+                        <material:PackIcon.Style>
+                            <Style TargetType="material:PackIcon">
+                                <Setter Property="Kind" Value="Cached"></Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ScanStatus}" Value="True">
+                                        <Setter Property="Kind" Value="WindowClose"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </material:PackIcon.Style>
+                    </material:PackIcon>
+                                      
                 </Button>
             </StackPanel>
 
         </Grid>
-        <Grid Row="1" Background="AntiqueWhite">
-            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
-                         Value="0"
-                         IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" Visibility="{Binding Progress}"></ProgressBar>
-            <DataGrid x:Name="ReplayGrid" Visibility="{Binding Path=GridVisible}" ItemsSource="{Binding Path=Replays, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False"
-                      IsReadOnly="True" SelectedItem="{Binding SelectedItem}">
+        <Grid Row="1">
+            <ProgressBar x:Name="Bar" Style="{StaticResource MaterialDesignCircularProgressBar}"
+                         Value="{Binding ScanPercent, Mode=OneWay}"
+                         IsIndeterminate="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60"></ProgressBar>
+            <TextBlock Text="{Binding ScanPercent}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ElementName=Bar, Path=Visibility}"></TextBlock>
+            <DataGrid x:Name="ReplayGrid" Visibility="{Binding Path=GridVisible}" ItemsSource="{Binding Path=Replays, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False"
+                      IsReadOnly="True" SelectedItem="{Binding SelectedItem}" Style="{DynamicResource MaterialDesignDataGrid}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Size" Binding="{Binding Size}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="File Name" Binding="{Binding Name}"></DataGridTextColumn>
                     <material:MaterialDataGridTextColumn Header="Map" Binding="{Binding Map}"></material:MaterialDataGridTextColumn>
                     <DataGridTextColumn Header="Status" Binding="{Binding Status}"></DataGridTextColumn>
                     <material:MaterialDataGridTextColumn Header="Player" Binding="{Binding Player}"></material:MaterialDataGridTextColumn>
@@ -59,24 +86,64 @@
                     <DataGridTextColumn Header="Respawn" Binding="{Binding Respawn}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Winner" Binding="{Binding Winner}"></DataGridTextColumn>
                     <material:MaterialDataGridTextColumn Header="BattleType" Binding="{Binding BattleType}"></material:MaterialDataGridTextColumn>
+                    <DataGridTextColumn Header="Mods" Binding="{Binding HasMods}"></DataGridTextColumn>
                     <DataGridTemplateColumn Header="Other">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Command="{Binding DataContext.OnOtherClick, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding}">
-                                    <Button.DataContext>
-                                        <viewmodel:ReplayInfoVm/>
-                                    </Button.DataContext> Подробнее</Button>
+                                     Подробнее
+                                </Button>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Показать в папке"></MenuItem>
+                        <MenuItem Header="Добавить в ZIP архив">
+                            <MenuItem Header="replays.zip"></MenuItem>
+                            <MenuItem Header="%nickname%.zip"></MenuItem>
+                            <MenuItem Header="Другое"></MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Переименовать">
+                            <MenuItem Header="Добавить в начало %nickname%_"></MenuItem>
+                            <MenuItem Header="Добавить в начало not_valid_"></MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Удалить выбранное"></MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <helpers:IsLowSizeConverter x:Key="LowSizeConverter"/>
+                </DataGrid.Resources>
                 <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
+                    <Style TargetType="DataGridRow" x:Name="MaterialDesignDataGridRow">
+
+                        <Setter Property="Background" Value="Transparent"></Setter>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Status}" Value="False">
-                                <Setter Property="Background" Value="Red"></Setter>
-                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Size, Converter={StaticResource LowSizeConverter}}" Value="False"></Condition>
+                                    <Condition Binding="{Binding DataContext.MarkLow, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Value="True"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="{Binding DataContext.LowColor, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" />
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Status}" Value="False"></Condition>
+                                    <Condition Binding="{Binding DataContext.MarkBroken, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Value="True"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" Value="{Binding DataContext.BrokenColor, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" />
+                            </MultiDataTrigger>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+                            </Trigger>
+                            <Trigger Property="IsNewItem" Value="True">
+                                <Setter Property="Margin" Value="{Binding NewItemMargin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                            </Trigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.RowStyle>

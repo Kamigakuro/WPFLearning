@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -17,11 +18,16 @@ namespace UI.Models
     public class ReplayInfoModel: INotifyPropertyChanged
     {
         //private List<string> _pathes;
-        private ObservableCollection<string> _pathes;
         private ObservableCollection<ReplayData> _replays;
-
-        public ObservableCollection<string> Pathes { get => _pathes;
-            set { _pathes = value; OnPropertyChanged("Pathes"); }
+        public Stopwatch ScanTime;
+        public int RelayCount;
+        private int _scanCount;
+        private int _broken;
+        private LAction scan;
+        private int _scanpercent;
+        public bool isScaning;
+        public ObservableCollection<string> Pathes { get => Settings.Pathes;
+            set { Settings.Pathes = value; OnPropertyChanged("Pathes"); }
         }
 
         public ObservableCollection<ReplayData> Replays
@@ -32,21 +38,45 @@ namespace UI.Models
                 OnPropertyChanged("Replays");
             }
         }
-
+        public int ScanCount
+        {
+            get => _scanCount;
+            set { _scanCount = value; OnPropertyChanged("ScanCount"); }
+        }
+        public int ScanPercent
+        {
+            get => _scanpercent;
+            set { _scanpercent = value; OnPropertyChanged("ScanPercent"); }
+        }
+        public int BrokenRep
+        {
+            get => _broken;
+            set { _broken = value; OnPropertyChanged("BrokenRep"); }
+        }
         public ReplayInfoModel()
         {
-            Pathes = new ObservableCollection<string>();
-            Pathes.Add("Test");
-            Pathes.Add("Test1");
+            ScanPercent = 0;
+            //Pathes = Settings.Pathes;
         }
         public void ScanReplays(string path)
         {
-            LAction scan = new LAction();
-            FileInfo[] files = scan.ScanFolder(path, false);
-            if (files.Length > 0)
-            {              
-                ConvertToCollection(scan.ScanReplays(files));
+            ScanTime = Stopwatch.StartNew();
+            scan = new LAction();
+            ScanCount = 0;
+            scan.Count += UpdateScanCount;
+            if (Directory.Exists(path))
+            {
+                FileInfo[] files = scan.ScanFolder(path, Settings.ScanSubDir);
+                if (files.Length > 0)
+                {
+                    isScaning = true;
+                    RelayCount = files.Length;
+                    ConvertToCollection(scan.ScanReplays(files, 10));
+                }
             }
+            scan.Count -= UpdateScanCount;
+            ScanTime.Stop();
+            isScaning = false;
         }
 
         public void ConvertToCollection(List<ReplayData> list)
@@ -67,6 +97,20 @@ namespace UI.Models
 
             Replays = tmp;
         }
+
+        private void UpdateScanCount()
+        {
+            ScanCount++;
+            BrokenRep = scan._broken;
+            ScanPercent = (100 * ScanCount) / RelayCount;
+        }
+
+        public void StopScan()
+        {
+            isScaning = false;
+            scan.ForceStopScan();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

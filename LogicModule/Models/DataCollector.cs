@@ -86,13 +86,13 @@ namespace LogicModule.Models
             return false;
         }
 
-        public int PlayerId(string text)
+        public long PlayerId(string text)
         {
             if (text == null) throw new ArgumentNullException(text);
             const string pat = @"""playerID"":.(\d*),";
             Regex regex = new Regex(pat);
             MatchCollection matches = regex.Matches(text);
-            if (matches.Count > 0) return Convert.ToInt32(matches[0].Groups[1].Value);
+            if (matches.Count > 0) return Convert.ToUInt32(matches[0].Groups[1].Value);
             return -1;
         }
 
@@ -296,7 +296,7 @@ namespace LogicModule.Models
             if (text == null) throw new ArgumentNullException(text);
             Regex regex = new Regex(@"""clientVersionFromXml"":\s""(.*?)"",");
             Match matches = regex.Match(text);
-            if (matches.Success) return matches.Groups[1].Value;
+            if (matches.Success) return matches.Groups[1].Value.Replace("\\u00a0", " ");
             return null;
         }
 

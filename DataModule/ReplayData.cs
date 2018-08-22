@@ -25,7 +25,7 @@ namespace DataModule
         public string RegionCode { get; set; }
         public int BattleType { get; set; }
         public bool HasMods { get; set; }
-        public int PlayerId { get; set; } 
+        public long PlayerId { get; set; } 
         public string ServerName { get; set; }
         public List<Player> Players { get; set; }
 

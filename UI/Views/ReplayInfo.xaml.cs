@@ -24,7 +24,7 @@ namespace UI.Views
         public ReplayInfo()
         {
             InitializeComponent();
-            DataContext = new ReplayInfoVm();
+            //DataContext = new ReplayInfoVm();
         }
     }
 }

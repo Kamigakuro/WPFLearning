@@ -61,13 +61,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\WGNew.cs" />
+    <Compile Include="Helpers\IsLowSizeConverter.cs" />
+    <Compile Include="Helpers\NotEmptyValidationRule.cs" />
     <Compile Include="Models\BaseCommand.cs" />
+    <Compile Include="Models\ColumnInfo.cs" />
+    <Compile Include="Models\HTTPContent.cs" />
     <Compile Include="Models\PathesList.cs" />
     <Compile Include="Models\ReplayInfoModel.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\ThemeSwither.cs" />
+    <Compile Include="ViewModels\InfoPanelVM.cs" />
+    <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="ViewModels\ReplayInfoVm.cs" />
     <Compile Include="ViewModels\ReplayInfoWindowVM.cs" />
     <Compile Include="ViewModels\SettingsVM.cs" />
+    <Compile Include="ViewModels\SnackManager.cs" />
+    <Compile Include="Views\Main.xaml.cs">
+      <DependentUpon>Main.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ReplayInfo.xaml.cs">
       <DependentUpon>ReplayInfo.xaml</DependentUpon>
     </Compile>
@@ -89,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ReplayInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,9 +146,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DataModule\DataModule.csproj">
       <Project>{786c5bcf-1aa8-4936-a1cc-566298066f8c}</Project>
