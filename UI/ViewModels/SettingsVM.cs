@@ -30,8 +30,8 @@ namespace UI.ViewModels
         public SettingsVM()
         {
             SaveSettings = new BaseCommand(SaveSettingsCommand);
-            ChangeBroken = new BaseCommand(OnChangeBroke);
-            ChangeLow = new BaseCommand(SaveSettingsCommand);
+            //ChangeBroken = new BaseCommand(OnChangeBroken);
+            //ChangeLow = new BaseCommand(SaveSettingsCommand);
             Themes = new ObservableCollection<string>(Settings.Themes);
             SelectedTheme = Settings.Theme;
         }

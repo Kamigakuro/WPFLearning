@@ -46,7 +46,7 @@ namespace LogicModule.Models
                 }
                 catch (Exception ex)
                 {
-                    //Message
+                    Console.WriteLine(ex.ToString());
                     return null;
                 }
 

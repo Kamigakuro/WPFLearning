@@ -23,7 +23,7 @@ namespace UI.ViewModels
 
         private object _selectedPage;
 
-        private SnackManager _snack;
+        //private SnackManager _snack;
         public SnackManager Snack
         {
             get => Settings.snack;

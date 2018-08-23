@@ -254,7 +254,7 @@ namespace UI.Models
                 if (node.NodeType == System.Xml.XmlNodeType.Element)
                 {
                     XElement el = (System.Xml.Linq.XElement)node;
-                    int z = 0;
+                    //int z = 0;
                     foreach (System.Xml.Linq.XElement element in el.Elements())
                     {
                         if (element.Name == "Version") element.Value = Version;
