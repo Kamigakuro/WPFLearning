@@ -147,7 +147,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\if_Artboard_9svg_1579798.png" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModule\DataModule.csproj">
       <Project>{786c5bcf-1aa8-4936-a1cc-566298066f8c}</Project>

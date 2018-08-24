@@ -27,6 +27,10 @@ namespace UI
             Settings.Themes.Add("DeepOrange");
             Settings.Themes.Add("Yellow");
             base.OnStartup(e);
+            if (Settings.CheckUpdates)
+            {
+
+            }
         }
     }
 }

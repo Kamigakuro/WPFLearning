@@ -17,7 +17,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         MinHeight="400" MinWidth="400"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="760" Width="1280" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip">
+        Title="MainWindow" Height="760" Width="1280" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Icon="Resources/if_Artboard_9svg_1579798.png">
     <Window.Resources>
         <DataTemplate x:Name="ScanPage" DataType="{x:Type viewModels:ReplayInfoVm}">
             <views:ReplayInfo />
